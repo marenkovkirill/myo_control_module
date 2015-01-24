@@ -95,32 +95,43 @@ void DataCollector::print() {
     std::cout << std::flush;
 
 	if (sendAxisState_out) {
-		(*sendAxisState_out)(1, currentPose == myo::Pose::fist ? 1 : 0);
+		if (onArm && isUnlocked) {
+			(*sendAxisState_out)(1, currentPose == myo::Pose::fist ? 1 : 0);
 
-		if (
-			(currentPose == myo::Pose::waveOut && whichArm == myo::armLeft)
-			|| (currentPose == myo::Pose::waveIn && whichArm == myo::armRight)
-		) {
-			(*sendAxisState_out)(2, 1);
+			if (
+				(currentPose == myo::Pose::waveOut && whichArm == myo::armLeft)
+				|| (currentPose == myo::Pose::waveIn && whichArm == myo::armRight)
+			) {
+				(*sendAxisState_out)(2, 1);
+			} else {
+				(*sendAxisState_out)(2, 0);
+			}
+
+			if (
+				(currentPose == myo::Pose::waveIn && whichArm == myo::armLeft)
+				|| (currentPose == myo::Pose::waveOut && whichArm == myo::armRight)
+			) {
+				(*sendAxisState_out)(3, 1);
+			} else {
+				(*sendAxisState_out)(3, 0);
+			}
+
+			(*sendAxisState_out)(4, currentPose == myo::Pose::fingersSpread ? 1 : 0);
+			(*sendAxisState_out)(5, currentPose == myo::Pose::doubleTap ? 1 : 0);
+			
+			(*sendAxisState_out)(6, 1);
+
+			if (currentPose == myo::Pose::fist) {
+				(*sendAxisState_out)(7, pitch_w);
+			}
 		} else {
+			(*sendAxisState_out)(1, 0);
 			(*sendAxisState_out)(2, 0);
-		}
-
-		if (
-			(currentPose == myo::Pose::waveIn && whichArm == myo::armLeft)
-			|| (currentPose == myo::Pose::waveOut && whichArm == myo::armRight)
-		) {
-			(*sendAxisState_out)(3, 1);
-		} else {
 			(*sendAxisState_out)(3, 0);
-		}
-
-		(*sendAxisState_out)(4, currentPose == myo::Pose::fingersSpread ? 1 : 0);
-		(*sendAxisState_out)(5, currentPose == myo::Pose::doubleTap ? 1 : 0);
-		(*sendAxisState_out)(6, onArm && isUnlocked ? 0 : 1);
-
-		if (currentPose == myo::Pose::fist) {
-			(*sendAxisState_out)(7, pitch_w);
+			(*sendAxisState_out)(4, 0);
+			(*sendAxisState_out)(5, 0);
+			(*sendAxisState_out)(6, 0);
+			(*sendAxisState_out)(7, 0);
 		}
 	}
 }
