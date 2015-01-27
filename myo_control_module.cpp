@@ -16,8 +16,7 @@ const int COUNT_AXIS = 7;
 
 #define DEFINE_ALL_AXIS \
 	ADD_AXIS("fist", 1, 0)\
-	ADD_AXIS("left", 1, 0)\
-	ADD_AXIS("right", 1, 0)\
+	ADD_AXIS("left_or_right", 1, -1)\
 	ADD_AXIS("fingers_spread", 1, 0)\
 	ADD_AXIS("double_tap", 1, 0)\
 	ADD_AXIS("locked", 1, 0)\

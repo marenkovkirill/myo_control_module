@@ -75,7 +75,7 @@ void DataCollector::finish() {
 }
 
 void DataCollector::print() {
-    std::cout << '\n';
+    /*std::cout << '\n';
 
     std::cout << '[' << std::string(roll_w, '*') << std::string(18 - roll_w, ' ') << ']'
                   << '[' << std::string(pitch_w, '*') << std::string(18 - pitch_w, ' ') << ']'
@@ -92,7 +92,7 @@ void DataCollector::print() {
 	
 	std::cout << '\n';
 
-    std::cout << std::flush;
+    std::cout << std::flush;*/
 
 	if (sendAxisState_out) {
 		if (onArm && isUnlocked) {
@@ -102,36 +102,33 @@ void DataCollector::print() {
 				(currentPose == myo::Pose::waveOut && whichArm == myo::armLeft)
 				|| (currentPose == myo::Pose::waveIn && whichArm == myo::armRight)
 			) {
-				(*sendAxisState_out)(2, 1);
+				(*sendAxisState_out)(2, -1);
 			} else {
-				(*sendAxisState_out)(2, 0);
+				if (
+					(currentPose == myo::Pose::waveIn && whichArm == myo::armLeft)
+					|| (currentPose == myo::Pose::waveOut && whichArm == myo::armRight)
+				) {
+					(*sendAxisState_out)(2, 1);
+				} else {
+					(*sendAxisState_out)(2, 0);
+				}
 			}
 
-			if (
-				(currentPose == myo::Pose::waveIn && whichArm == myo::armLeft)
-				|| (currentPose == myo::Pose::waveOut && whichArm == myo::armRight)
-			) {
-				(*sendAxisState_out)(3, 1);
-			} else {
-				(*sendAxisState_out)(3, 0);
-			}
-
-			(*sendAxisState_out)(4, currentPose == myo::Pose::fingersSpread ? 1 : 0);
-			(*sendAxisState_out)(5, currentPose == myo::Pose::doubleTap ? 1 : 0);
+			(*sendAxisState_out)(3, currentPose == myo::Pose::fingersSpread ? 1 : 0);
+			(*sendAxisState_out)(4, currentPose == myo::Pose::doubleTap ? 1 : 0);
 			
-			(*sendAxisState_out)(6, 1);
+			(*sendAxisState_out)(5, 0);
 
 			if (currentPose == myo::Pose::fist) {
-				(*sendAxisState_out)(7, pitch_w);
+				(*sendAxisState_out)(6, pitch_w);
 			}
 		} else {
 			(*sendAxisState_out)(1, 0);
 			(*sendAxisState_out)(2, 0);
 			(*sendAxisState_out)(3, 0);
 			(*sendAxisState_out)(4, 0);
-			(*sendAxisState_out)(5, 0);
+			(*sendAxisState_out)(5, 1);
 			(*sendAxisState_out)(6, 0);
-			(*sendAxisState_out)(7, 0);
 		}
 	}
 }
