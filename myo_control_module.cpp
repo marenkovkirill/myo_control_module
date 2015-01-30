@@ -99,7 +99,7 @@ void MyoControlModule::execute(sendAxisState_t sendAxisState) {
 }
 
 MyoControlModule::MyoControlModule() {
-	robot_axis = new AxisData[COUNT_AXIS];
+	robot_axis = new AxisData*[COUNT_AXIS];
 	regval axis_id = 0;
 	DEFINE_ALL_AXIS
 }
@@ -132,18 +132,19 @@ void MyoControlModule::final() {
 	delete hub;
 }
 
-AxisData* MyoControlModule::getAxis(int *count_axis) {
+AxisData** MyoControlModule::getAxis(int *count_axis) {
 	(*count_axis) = COUNT_AXIS;
 	return robot_axis;
 }
 
 void MyoControlModule::destroy() {
+	for (int j = 0; j < COUNT_AXIS; ++j) {
+		delete robot_axis[j];
+	}
 	delete[] robot_axis;
 	delete this;
 }
 
 __declspec(dllexport) ControlModule* getControlModuleObject() {
-	MyoControlModule *kcm = new MyoControlModule();
-	ControlModule *cm = kcm;
-	return cm;
+	return new MyoControlModule();
 }
