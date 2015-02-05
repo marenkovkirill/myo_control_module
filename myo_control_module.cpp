@@ -126,6 +126,10 @@ int MyoControlModule::init() {
 	return 0;
 }
 
+int MyoControlModule::getVersion() {
+	return 0x0100; //1.00
+}
+
 void MyoControlModule::final() {
 	hub->removeListener(myo_data_collector);
 	delete myo_data_collector;
