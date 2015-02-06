@@ -10,7 +10,7 @@ class MyoControlModule : public ControlModule {
 
 	public:
 		MyoControlModule();
-		int getVersion();
+		const char *getUID();
 		int init();
 		AxisData** getAxis(int *count_axis);
 		void execute(sendAxisState_t sendAxisState);

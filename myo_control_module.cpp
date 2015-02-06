@@ -126,8 +126,8 @@ int MyoControlModule::init() {
 	return 0;
 }
 
-int MyoControlModule::getVersion() {
-	return 0x0100; //1.00
+const char *MyoControlModule::getUID() {
+	return "Myo control module v0.95b by m79lol";
 }
 
 void MyoControlModule::final() {
