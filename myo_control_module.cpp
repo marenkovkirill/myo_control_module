@@ -126,6 +126,10 @@ int MyoControlModule::init() {
 	return 0;
 }
 
+const char *MyoControlModule::getUID() {
+	return "Myo control module v0.95b by m79lol";
+}
+
 void MyoControlModule::final() {
 	hub->removeListener(myo_data_collector);
 	delete myo_data_collector;

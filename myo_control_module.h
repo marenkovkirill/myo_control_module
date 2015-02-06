@@ -10,12 +10,13 @@ class MyoControlModule : public ControlModule {
 
 	public:
 		MyoControlModule();
-		virtual int init();
-		virtual AxisData** getAxis(int *count_axis);
-		virtual void execute(sendAxisState_t sendAxisState);
-		virtual void final();
-		virtual void destroy();
-		virtual ~MyoControlModule() {}
+		const char *getUID();
+		int init();
+		AxisData** getAxis(int *count_axis);
+		void execute(sendAxisState_t sendAxisState);
+		void final();
+		void destroy();
+		~MyoControlModule() {}
 };
 
 #define ADD_AXIS(AXIS_NAME, UPPER_VALUE, LOWER_VALUE) \
