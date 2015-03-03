@@ -108,19 +108,19 @@ int MyoControlModule::init() {
 	 try {
 		hub = new myo::Hub("com.example.myo_control_module");
 		
-		std::cout << "Attempting to find a Myo..." << std::endl;
+		colorPrintf(ConsoleColor(), "Attempting to find a Myo...\n");
 
 		myo = hub->waitForMyo(10000);
 		if (!myo) {
 			throw std::runtime_error("Unable to find a Myo!");
 		}
-		std::cout << "Connected to a Myo armband!" << std::endl << std::endl;
+		colorPrintf(ConsoleColor(ConsoleColor::green), "Connected to a Myo armband!\n");
 
 		myo_data_collector = new DataCollector();
 		hub->addListener(myo_data_collector);
 
     } catch (const std::exception& e) {
-        std::cerr << "Error: " << e.what() << std::endl;
+        colorPrintf(ConsoleColor(ConsoleColor::red), "Error: %s\n", e.what());
         return 1;
     }
 	return 0;
@@ -128,6 +128,17 @@ int MyoControlModule::init() {
 
 const char *MyoControlModule::getUID() {
 	return "Myo control module v0.95b by m79lol";
+}
+
+void MyoControlModule::prepare(colorPrintf_t *colorPrintf_p, colorPrintfVA_t *colorPrintfVA_p) {
+	this->colorPrintf_p = colorPrintfVA_p;
+}
+
+void MyoControlModule::colorPrintf(ConsoleColor colors, const char *mask, ...) {
+	va_list args;
+    va_start(args, mask);
+    (*colorPrintf_p)(this, colors, mask, args);
+    va_end(args);
 }
 
 void MyoControlModule::final() {
