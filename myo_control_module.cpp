@@ -12,7 +12,7 @@
 #include "myo_data_collector.h"
 #include "myo_control_module.h"
 
-const int COUNT_AXIS = 7;
+const int COUNT_AXIS = 6;
 
 #define DEFINE_ALL_AXIS \
 	ADD_AXIS("fist", 1, 0)\
