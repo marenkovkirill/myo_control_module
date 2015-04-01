@@ -12,7 +12,7 @@
 #include "myo_data_collector.h"
 #include "myo_control_module.h"
 
-const int COUNT_AXIS = 6;
+const unsigned int COUNT_AXIS = 6;
 
 #define DEFINE_ALL_AXIS \
 	ADD_AXIS("fist", 1, 0)\
@@ -100,7 +100,7 @@ void MyoControlModule::execute(sendAxisState_t sendAxisState) {
 
 MyoControlModule::MyoControlModule() {
 	robot_axis = new AxisData*[COUNT_AXIS];
-	regval axis_id = 0;
+	system_value axis_id = 0;
 	DEFINE_ALL_AXIS
 }
 
@@ -127,7 +127,7 @@ int MyoControlModule::init() {
 }
 
 const char *MyoControlModule::getUID() {
-	return "Myo control module v0.95b by m79lol";
+	return "Myo control module v0.99b by m79lol";
 }
 
 void MyoControlModule::prepare(colorPrintf_t *colorPrintf_p, colorPrintfVA_t *colorPrintfVA_p) {
@@ -147,13 +147,13 @@ void MyoControlModule::final() {
 	delete hub;
 }
 
-AxisData** MyoControlModule::getAxis(int *count_axis) {
+AxisData** MyoControlModule::getAxis(unsigned int *count_axis) {
 	(*count_axis) = COUNT_AXIS;
 	return robot_axis;
 }
 
 void MyoControlModule::destroy() {
-	for (int j = 0; j < COUNT_AXIS; ++j) {
+	for (unsigned int j = 0; j < COUNT_AXIS; ++j) {
 		delete robot_axis[j];
 	}
 	delete[] robot_axis;

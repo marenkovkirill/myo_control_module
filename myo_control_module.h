@@ -13,7 +13,7 @@ class MyoControlModule : public ControlModule {
 		const char *getUID();
 		void prepare(colorPrintf_t *colorPrintf_p, colorPrintfVA_t *colorPrintfVA_p);
 		int init();
-		AxisData** getAxis(int *count_axis);
+		AxisData** getAxis(unsigned int *count_axis);
 		void execute(sendAxisState_t sendAxisState);
 		void final();
 		void destroy();
