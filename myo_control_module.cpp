@@ -12,7 +12,7 @@
 #include "myo_data_collector.h"
 #include "myo_control_module.h"
 
-const int COUNT_AXIS = 7;
+const unsigned int COUNT_AXIS = 6;
 
 #define DEFINE_ALL_AXIS \
 	ADD_AXIS("fist", 1, 0)\
@@ -100,7 +100,7 @@ void MyoControlModule::execute(sendAxisState_t sendAxisState) {
 
 MyoControlModule::MyoControlModule() {
 	robot_axis = new AxisData*[COUNT_AXIS];
-	regval axis_id = 0;
+	system_value axis_id = 0;
 	DEFINE_ALL_AXIS
 }
 
@@ -108,26 +108,37 @@ int MyoControlModule::init() {
 	 try {
 		hub = new myo::Hub("com.example.myo_control_module");
 		
-		std::cout << "Attempting to find a Myo..." << std::endl;
+		colorPrintf(ConsoleColor(), "Attempting to find a Myo...\n");
 
 		myo = hub->waitForMyo(10000);
 		if (!myo) {
 			throw std::runtime_error("Unable to find a Myo!");
 		}
-		std::cout << "Connected to a Myo armband!" << std::endl << std::endl;
+		colorPrintf(ConsoleColor(ConsoleColor::green), "Connected to a Myo armband!\n");
 
 		myo_data_collector = new DataCollector();
 		hub->addListener(myo_data_collector);
 
     } catch (const std::exception& e) {
-        std::cerr << "Error: " << e.what() << std::endl;
+        colorPrintf(ConsoleColor(ConsoleColor::red), "Error: %s\n", e.what());
         return 1;
     }
 	return 0;
 }
 
 const char *MyoControlModule::getUID() {
-	return "Myo control module v0.95b by m79lol";
+	return "Myo control module v0.99b by m79lol";
+}
+
+void MyoControlModule::prepare(colorPrintf_t *colorPrintf_p, colorPrintfVA_t *colorPrintfVA_p) {
+	this->colorPrintf_p = colorPrintfVA_p;
+}
+
+void MyoControlModule::colorPrintf(ConsoleColor colors, const char *mask, ...) {
+	va_list args;
+    va_start(args, mask);
+    (*colorPrintf_p)(this, colors, mask, args);
+    va_end(args);
 }
 
 void MyoControlModule::final() {
@@ -136,13 +147,13 @@ void MyoControlModule::final() {
 	delete hub;
 }
 
-AxisData** MyoControlModule::getAxis(int *count_axis) {
+AxisData** MyoControlModule::getAxis(unsigned int *count_axis) {
 	(*count_axis) = COUNT_AXIS;
 	return robot_axis;
 }
 
 void MyoControlModule::destroy() {
-	for (int j = 0; j < COUNT_AXIS; ++j) {
+	for (unsigned int j = 0; j < COUNT_AXIS; ++j) {
 		delete robot_axis[j];
 	}
 	delete[] robot_axis;
