@@ -160,6 +160,18 @@ void MyoControlModule::destroy() {
 	delete this;
 }
 
+void *MyoControlModule::writePC(unsigned int *buffer_length) {
+	*buffer_length = 0;
+	return NULL;
+}
+
+int MyoControlModule::startProgram(int uniq_index, void *buffer, unsigned int buffer_length) {
+	return 0;
+}
+int MyoControlModule::endProgram(int uniq_index) {
+	return 0;
+}
+
 __declspec(dllexport) ControlModule* getControlModuleObject() {
 	return new MyoControlModule();
 }
