@@ -52,7 +52,7 @@ unsigned int WINAPI waitTerminateSignal(void *arg) {
 		for (i = 0; i < cNumRead; ++i) {
 			if (irInBuf[i].EventType == KEY_EVENT) {
 				WORD key_code = irInBuf[i].Event.KeyEvent.wVirtualKeyCode;
-				if (key_code == VK_ESCAPE) {
+				if ((key_code == VK_ESCAPE) && (irInBuf[i].Event.KeyEvent.bKeyDown)) {
 					goto exit; //exit
 				}
 			}
