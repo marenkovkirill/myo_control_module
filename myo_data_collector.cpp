@@ -49,7 +49,7 @@ void DataCollector::onPose(myo::Myo* myo, uint64_t timestamp, myo::Pose pose) {
     }
 }
 
-void DataCollector::onArmSync(myo::Myo* myo, uint64_t timestamp, myo::Arm arm, myo::XDirection xDirection) {
+void DataCollector::onArmSync(myo::Myo* myo, uint64_t timestamp, myo::Arm arm, myo::XDirection xDirection, float rotation, myo::WarmupState warmupState) {
     onArm = true;
     whichArm = arm;
 }
@@ -123,12 +123,7 @@ void DataCollector::print() {
 				(*sendAxisState_out)(6, pitch_w);
 			}
 		} else {
-			(*sendAxisState_out)(1, 0);
-			(*sendAxisState_out)(2, 0);
-			(*sendAxisState_out)(3, 0);
-			(*sendAxisState_out)(4, 0);
 			(*sendAxisState_out)(5, 1);
-			(*sendAxisState_out)(6, 0);
 		}
 	}
 }

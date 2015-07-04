@@ -18,7 +18,7 @@ class DataCollector : public myo::DeviceListener {
 		void onUnpair(myo::Myo* myo, uint64_t timestamp);
 		void onOrientationData(myo::Myo* myo, uint64_t timestamp, const myo::Quaternion<float>& quat);
 		void onPose(myo::Myo* myo, uint64_t timestamp, myo::Pose pose);
-		void onArmSync(myo::Myo* myo, uint64_t timestamp, myo::Arm arm, myo::XDirection xDirection);
+		void onArmSync(myo::Myo* myo, uint64_t timestamp, myo::Arm arm, myo::XDirection xDirection, float rotation, myo::WarmupState warmupState);
 		void onArmUnsync(myo::Myo* myo, uint64_t timestamp);
 		void onUnlock(myo::Myo* myo, uint64_t timestamp);
 		void onLock(myo::Myo* myo, uint64_t timestamp);

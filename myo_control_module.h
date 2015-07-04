@@ -6,12 +6,12 @@ class MyoControlModule : public ControlModule {
 	myo::Myo* myo;
 	DataCollector *myo_data_collector;
 	AxisData **robot_axis;
-	colorPrintfVA_t *colorPrintf_p;
+	colorPrintfModuleVA_t *colorPrintf_p;
 
 	public:
 		MyoControlModule();
 		const char *getUID();
-		void prepare(colorPrintf_t *colorPrintf_p, colorPrintfVA_t *colorPrintfVA_p);
+		void prepare(colorPrintfModule_t *colorPrintf_p, colorPrintfModuleVA_t *colorPrintfVA_p);
 
 		AxisData** getAxis(unsigned int *count_axis);
 		void *writePC(unsigned int *buffer_length);
@@ -20,7 +20,9 @@ class MyoControlModule : public ControlModule {
 		void execute(sendAxisState_t sendAxisState);
 		void final();
 
-		int startProgram(int uniq_index, void *buffer, unsigned int buffer_length);
+		void readPC(void *buffer, unsigned int buffer_length) {};
+
+		int startProgram(int uniq_index);
 		int endProgram(int uniq_index);
 
 		void destroy();

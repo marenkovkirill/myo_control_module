@@ -5,9 +5,8 @@
 
 #include <myo/myo.hpp>
 
-#include "../module_headers/module.h"
-#include "../module_headers/control_module.h"
-#include "../rcml_compiler/globals.h"
+#include "module.h"
+#include "control_module.h"
 
 #include "myo_data_collector.h"
 #include "myo_control_module.h"
@@ -127,10 +126,10 @@ int MyoControlModule::init() {
 }
 
 const char *MyoControlModule::getUID() {
-	return "Myo control module v0.99b by m79lol";
+	return "Myo control module v1.01b by m79lol";
 }
 
-void MyoControlModule::prepare(colorPrintf_t *colorPrintf_p, colorPrintfVA_t *colorPrintfVA_p) {
+void MyoControlModule::prepare(colorPrintfModule_t *colorPrintf_p, colorPrintfModuleVA_t *colorPrintfVA_p) {
 	this->colorPrintf_p = colorPrintfVA_p;
 }
 
@@ -165,7 +164,7 @@ void *MyoControlModule::writePC(unsigned int *buffer_length) {
 	return NULL;
 }
 
-int MyoControlModule::startProgram(int uniq_index, void *buffer, unsigned int buffer_length) {
+int MyoControlModule::startProgram(int uniq_index) {
 	return 0;
 }
 int MyoControlModule::endProgram(int uniq_index) {
