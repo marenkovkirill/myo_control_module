@@ -1,8 +1,12 @@
 #ifndef MYO_DATA_COLLECTOR_H
 #define	MYO_DATA_COLLECTOR_H
 
+class MyoControlModule;
+
 class DataCollector : public myo::DeviceListener {
 	public:
+		MyoControlModule *parent;
+		
 		bool onArm;
 		myo::Arm whichArm;
 
@@ -10,10 +14,10 @@ class DataCollector : public myo::DeviceListener {
 
 		int roll_w, pitch_w, yaw_w;
 		myo::Pose currentPose;
-
+				
 		sendAxisState_t sendAxisState_out;
 
-		DataCollector() : onArm(false), isUnlocked(false), roll_w(0), pitch_w(0), yaw_w(0), currentPose(), sendAxisState_out(NULL) {}
+		DataCollector(MyoControlModule *parent) : parent(parent), onArm(false), isUnlocked(false), roll_w(0), pitch_w(0), yaw_w(0), currentPose(), sendAxisState_out(NULL) {}
 		
 		void onUnpair(myo::Myo* myo, uint64_t timestamp);
 		void onOrientationData(myo::Myo* myo, uint64_t timestamp, const myo::Quaternion<float>& quat);

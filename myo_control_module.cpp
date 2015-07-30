@@ -115,7 +115,7 @@ int MyoControlModule::init() {
 		}
 		colorPrintf(ConsoleColor(ConsoleColor::green), "Connected to a Myo armband!\n");
 
-		myo_data_collector = new DataCollector();
+		myo_data_collector = new DataCollector(this);
 		hub->addListener(myo_data_collector);
 
     } catch (const std::exception& e) {

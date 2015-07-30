@@ -12,6 +12,7 @@
 #include "../module_headers/control_module.h"
 
 #include "myo_data_collector.h"
+#include "myo_control_module.h"
 
 void DataCollector::onUnpair(myo::Myo* myo, uint64_t timestamp) {
     roll_w = 0;
@@ -96,34 +97,34 @@ void DataCollector::print() {
 
 	if (sendAxisState_out) {
 		if (onArm && isUnlocked) {
-			(*sendAxisState_out)(this, 1, currentPose == myo::Pose::fist ? 1 : 0);
+			(*sendAxisState_out)(parent, 1, currentPose == myo::Pose::fist ? 1 : 0);
 
 			if (
 				(currentPose == myo::Pose::waveOut && whichArm == myo::armLeft)
 				|| (currentPose == myo::Pose::waveIn && whichArm == myo::armRight)
 			) {
-				(*sendAxisState_out)(this, 2, -1);
+				(*sendAxisState_out)(parent, 2, -1);
 			} else {
 				if (
 					(currentPose == myo::Pose::waveIn && whichArm == myo::armLeft)
 					|| (currentPose == myo::Pose::waveOut && whichArm == myo::armRight)
 				) {
-					(*sendAxisState_out)(this, 2, 1);
+					(*sendAxisState_out)(parent, 2, 1);
 				} else {
-					(*sendAxisState_out)(this, 2, 0);
+					(*sendAxisState_out)(parent, 2, 0);
 				}
 			}
 
-			(*sendAxisState_out)(this, 3, currentPose == myo::Pose::fingersSpread ? 1 : 0);
-			(*sendAxisState_out)(this, 4, currentPose == myo::Pose::doubleTap ? 1 : 0);
+			(*sendAxisState_out)(parent, 3, currentPose == myo::Pose::fingersSpread ? 1 : 0);
+			(*sendAxisState_out)(parent, 4, currentPose == myo::Pose::doubleTap ? 1 : 0);
 			
-			(*sendAxisState_out)(this, 5, 0);
+			(*sendAxisState_out)(parent, 5, 0);
 
 			if (currentPose == myo::Pose::fist) {
-				(*sendAxisState_out)(this, 6, pitch_w);
+				(*sendAxisState_out)(parent, 6, pitch_w);
 			}
 		} else {
-			(*sendAxisState_out)(this, 5, 1);
+			(*sendAxisState_out)(parent, 5, 1);
 		}
 	}
 }
