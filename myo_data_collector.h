@@ -1,31 +1,46 @@
 #ifndef MYO_DATA_COLLECTOR_H
-#define	MYO_DATA_COLLECTOR_H
+#define MYO_DATA_COLLECTOR_H
+
+class MyoControlModule;
 
 class DataCollector : public myo::DeviceListener {
-	public:
-		bool onArm;
-		myo::Arm whichArm;
+ public:
+  MyoControlModule* parent;
 
-		bool isUnlocked;
+  bool onArm;
+  myo::Arm whichArm;
 
-		int roll_w, pitch_w, yaw_w;
-		myo::Pose currentPose;
+  bool isUnlocked;
 
-		sendAxisState_t sendAxisState_out;
+  int roll_w, pitch_w, yaw_w;
+  myo::Pose currentPose;
 
-		DataCollector() : onArm(false), isUnlocked(false), roll_w(0), pitch_w(0), yaw_w(0), currentPose(), sendAxisState_out(NULL) {}
-		
-		void onUnpair(myo::Myo* myo, uint64_t timestamp);
-		void onOrientationData(myo::Myo* myo, uint64_t timestamp, const myo::Quaternion<float>& quat);
-		void onPose(myo::Myo* myo, uint64_t timestamp, myo::Pose pose);
-		void onArmSync(myo::Myo* myo, uint64_t timestamp, myo::Arm arm, myo::XDirection xDirection);
-		void onArmUnsync(myo::Myo* myo, uint64_t timestamp);
-		void onUnlock(myo::Myo* myo, uint64_t timestamp);
-		void onLock(myo::Myo* myo, uint64_t timestamp);
+  sendAxisState_t sendAxisState_out;
 
-		void start(sendAxisState_t sendAxisState_addr);
-		void finish();
-		void print();
+  DataCollector(MyoControlModule* parent)
+      : parent(parent),
+        onArm(false),
+        isUnlocked(false),
+        roll_w(0),
+        pitch_w(0),
+        yaw_w(0),
+        currentPose(),
+        sendAxisState_out(NULL) {}
+
+  void onUnpair(myo::Myo* myo, uint64_t timestamp);
+  void onOrientationData(myo::Myo* myo, uint64_t timestamp,
+                         const myo::Quaternion<float>& quat);
+  void onPose(myo::Myo* myo, uint64_t timestamp, myo::Pose pose);
+  void onArmSync(myo::Myo* myo, uint64_t timestamp, myo::Arm arm,
+                 myo::XDirection xDirection, float rotation,
+                 myo::WarmupState warmupState);
+  void onArmUnsync(myo::Myo* myo, uint64_t timestamp);
+  void onUnlock(myo::Myo* myo, uint64_t timestamp);
+  void onLock(myo::Myo* myo, uint64_t timestamp);
+
+  void start(sendAxisState_t sendAxisState_addr);
+  void finish();
+  void print();
 };
 
-#endif	/* MYO_DATA_COLLECTOR_H */
+#endif /* MYO_DATA_COLLECTOR_H */
