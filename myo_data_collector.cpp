@@ -8,8 +8,8 @@
 
 #include <myo/myo.hpp>
 
-#include "../module_headers/module.h"
-#include "../module_headers/control_module.h"
+#include "module.h"
+#include "control_module.h"
 
 #include "myo_data_collector.h"
 #include "myo_control_module.h"
