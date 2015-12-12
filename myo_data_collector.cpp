@@ -104,30 +104,39 @@ void DataCollector::print() {
 
   if (sendAxisState_out) {
     if (onArm && isUnlocked) {
-      (*sendAxisState_out)(parent, 1, currentPose == myo::Pose::fist ? 1 : 0);
-
-      if ((currentPose == myo::Pose::waveOut && whichArm == myo::armLeft) ||
+	  (*sendAxisState_out)(parent, MyoControlModule::Axis::locked, 0);
+      
+	  if ((currentPose == myo::Pose::waveOut && whichArm == myo::armLeft) ||
           (currentPose == myo::Pose::waveIn && whichArm == myo::armRight)) {
-        (*sendAxisState_out)(parent, 2, -1);
+		  (*sendAxisState_out)(parent, MyoControlModule::Axis::left_or_right, -1);
       } else {
         if ((currentPose == myo::Pose::waveIn && whichArm == myo::armLeft) ||
             (currentPose == myo::Pose::waveOut && whichArm == myo::armRight)) {
-          (*sendAxisState_out)(parent, 2, 1);
+			(*sendAxisState_out)(parent, MyoControlModule::Axis::left_or_right, 1);
         } else {
-          (*sendAxisState_out)(parent, 2, 0);
+			(*sendAxisState_out)(parent, MyoControlModule::Axis::left_or_right, 0);
         }
       }
 
-      (*sendAxisState_out)(parent, 3,
-                           currentPose == myo::Pose::fingersSpread ? 1 : 0);
-      (*sendAxisState_out)(parent, 4,
+	  (*sendAxisState_out)(parent, MyoControlModule::Axis::double_tap,
                            currentPose == myo::Pose::doubleTap ? 1 : 0);
 
-      (*sendAxisState_out)(parent, 5, 0);
-
       if (currentPose == myo::Pose::fist) {
-        (*sendAxisState_out)(parent, 6, pitch_w);
-      }
+		  (*sendAxisState_out)(parent, MyoControlModule::Axis::fist, 1);
+		  (*sendAxisState_out)(parent, MyoControlModule::Axis::fist_pitch_angle, pitch_w);
+		  (*sendAxisState_out)(parent, MyoControlModule::Axis::fist_roll_angle, roll_w);
+		  (*sendAxisState_out)(parent, MyoControlModule::Axis::fist_yaw_angle, yaw_w);
+	  } else {
+		  (*sendAxisState_out)(parent, MyoControlModule::Axis::fist, 0);
+	  }
+	  if (currentPose == myo::Pose::fingersSpread) {
+		  (*sendAxisState_out)(parent, MyoControlModule::Axis::fingers_spread, 1);
+		  (*sendAxisState_out)(parent, MyoControlModule::Axis::fingers_spread_pitch_angle, pitch_w);
+		  (*sendAxisState_out)(parent, MyoControlModule::Axis::fingers_spread_roll_angle, roll_w);
+		  (*sendAxisState_out)(parent, MyoControlModule::Axis::fingers_spread_yaw_angle, yaw_w);
+	  } else {
+		  (*sendAxisState_out)(parent, MyoControlModule::Axis::fingers_spread, 0);
+	  }
     } else {
       (*sendAxisState_out)(parent, 5, 1);
     }
