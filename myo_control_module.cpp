@@ -14,25 +14,29 @@
 const unsigned int COUNT_AXIS = 11;
 
 #define ADD_AXIS(AXIS_NAME, AXIS_ID, UPPER_VALUE, LOWER_VALUE) \
-	robot_axis[axis_id] = new AxisData;                 \
-	robot_axis[axis_id]->axis_index = AXIS_ID;      \
-	robot_axis[axis_id]->upper_value = UPPER_VALUE;     \
-	robot_axis[axis_id]->lower_value = LOWER_VALUE;     \
-	robot_axis[axis_id]->name = AXIS_NAME;              \
-	axis_id++;
+  robot_axis[axis_id] = new AxisData;                          \
+  robot_axis[axis_id]->axis_index = AXIS_ID;                   \
+  robot_axis[axis_id]->upper_value = UPPER_VALUE;              \
+  robot_axis[axis_id]->lower_value = LOWER_VALUE;              \
+  robot_axis[axis_id]->name = AXIS_NAME;                       \
+  axis_id++;
 
-#define DEFINE_ALL_AXIS            \
-	ADD_AXIS("fist", MyoControlModule::Axis::fist, 1, 0)           \
-	ADD_AXIS("left_or_right", MyoControlModule::Axis::left_or_right, 1, -1) \
-	ADD_AXIS("fingers_spread", MyoControlModule::Axis::fingers_spread, 1, 0) \
-	ADD_AXIS("double_tap", MyoControlModule::Axis::double_tap, 1, 0)     \
-	ADD_AXIS("locked", MyoControlModule::Axis::locked, 1, 0)         \
-	ADD_AXIS("fist_pitch_angle", MyoControlModule::Axis::fist_pitch_angle, 18, 0) \
-	ADD_AXIS("fist_roll_angle", MyoControlModule::Axis::fist_roll_angle, 18, 0) \
-	ADD_AXIS("fist_yaw_angle", MyoControlModule::Axis::fist_yaw_angle, 18, 0) \
-	ADD_AXIS("fingers_spread_pitch_angle", MyoControlModule::Axis::fingers_spread_pitch_angle, 18, 0) \
-	ADD_AXIS("fingers_spread_roll_angle", MyoControlModule::Axis::fingers_spread_roll_angle, 18, 0) \
-	ADD_AXIS("fingers_spread_yaw_angle", MyoControlModule::Axis::fingers_spread_yaw_angle, 18, 0)
+#define DEFINE_ALL_AXIS                                                       \
+  ADD_AXIS("fist", MyoControlModule::Axis::fist, 1, 0)                        \
+  ADD_AXIS("left_or_right", MyoControlModule::Axis::left_or_right, 1, -1)     \
+  ADD_AXIS("fingers_spread", MyoControlModule::Axis::fingers_spread, 1, 0)    \
+  ADD_AXIS("double_tap", MyoControlModule::Axis::double_tap, 1, 0)            \
+  ADD_AXIS("locked", MyoControlModule::Axis::locked, 1, 0)                    \
+  ADD_AXIS("fist_pitch_angle", MyoControlModule::Axis::fist_pitch_angle, 18,  \
+           0)                                                                 \
+  ADD_AXIS("fist_roll_angle", MyoControlModule::Axis::fist_roll_angle, 18, 0) \
+  ADD_AXIS("fist_yaw_angle", MyoControlModule::Axis::fist_yaw_angle, 18, 0)   \
+  ADD_AXIS("fingers_spread_pitch_angle",                                      \
+           MyoControlModule::Axis::fingers_spread_pitch_angle, 18, 0)         \
+  ADD_AXIS("fingers_spread_roll_angle",                                       \
+           MyoControlModule::Axis::fingers_spread_roll_angle, 18, 0)          \
+  ADD_AXIS("fingers_spread_yaw_angle",                                        \
+           MyoControlModule::Axis::fingers_spread_yaw_angle, 18, 0)
 
 #define UID "Myo control module v1.01b by m79lol"
 
@@ -114,11 +118,11 @@ void MyoControlModule::execute(sendAxisState_t sendAxisState) {
 }
 
 MyoControlModule::MyoControlModule() {
-	mi = new ModuleInfo;
-	mi->uid = UID;
-	mi->mode = ModuleInfo::Modes::PROD;
-	mi->version = 1;
-	mi->digest = NULL;
+  mi = new ModuleInfo;
+  mi->uid = UID;
+  mi->mode = ModuleInfo::Modes::PROD;
+  mi->version = 1;
+  mi->digest = NULL;
 
   robot_axis = new AxisData *[COUNT_AXIS];
   system_value axis_id = 0;
@@ -189,8 +193,8 @@ void *MyoControlModule::writePC(unsigned int *buffer_length) {
 int MyoControlModule::startProgram(int uniq_index) { return 0; }
 int MyoControlModule::endProgram(int uniq_index) { return 0; }
 
-PREFIX_FUNC_DLL unsigned short getControlModuleApiVersion() { 
-	return CONTROL_MODULE_API_VERSION; 
+PREFIX_FUNC_DLL unsigned short getControlModuleApiVersion() {
+  return CONTROL_MODULE_API_VERSION;
 }
 PREFIX_FUNC_DLL ControlModule *getControlModuleObject() {
   return new MyoControlModule();

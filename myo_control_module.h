@@ -10,23 +10,22 @@ class MyoControlModule : public ControlModule {
   ModuleInfo *mi;
 
  public:
-	 enum Axis : system_value {
-		 fist = 1,
-		 left_or_right = 2,
-		 fingers_spread = 3,
-		 double_tap = 4,
-		 locked = 5,
-		 fist_pitch_angle = 6,
-		 fist_roll_angle = 7,
-		 fist_yaw_angle = 8,
-		 fingers_spread_pitch_angle = 9,
-		 fingers_spread_roll_angle = 10,
-		 fingers_spread_yaw_angle = 11
-	 };
-
+  enum Axis : system_value {
+    fist = 1,
+    left_or_right = 2,
+    fingers_spread = 3,
+    double_tap = 4,
+    locked = 5,
+    fist_pitch_angle = 6,
+    fist_roll_angle = 7,
+    fist_yaw_angle = 8,
+    fingers_spread_pitch_angle = 9,
+    fingers_spread_roll_angle = 10,
+    fingers_spread_yaw_angle = 11
+  };
 
   MyoControlModule();
-  const struct ModuleInfo& getModuleInfo();
+  const struct ModuleInfo &getModuleInfo();
   void prepare(colorPrintfModule_t *colorPrintf_p,
                colorPrintfModuleVA_t *colorPrintfVA_p);
 
