@@ -8,6 +8,8 @@
 #include "module.h"
 #include "control_module.h"
 
+#include <SimpleIni.h>
+
 #include "myo_data_collector.h"
 #include "myo_control_module.h"
 
@@ -42,6 +44,7 @@ const unsigned int COUNT_AXIS = 11;
 
 bool myo_working = false;
 CRITICAL_SECTION myo_working_mutex;
+EXTERN_C IMAGE_DOS_HEADER __ImageBase;
 
 unsigned int WINAPI waitTerminateSignal(void *arg) {
   HANDLE hStdin = GetStdHandle(STD_INPUT_HANDLE);
@@ -124,12 +127,35 @@ MyoControlModule::MyoControlModule() {
   mi->version = 1;
   mi->digest = NULL;
 
+  _isDebug = false;
+
   robot_axis = new AxisData *[COUNT_AXIS];
   system_value axis_id = 0;
   DEFINE_ALL_AXIS
 }
 
 int MyoControlModule::init() {
+  WCHAR DllPath[MAX_PATH] = {0};
+  GetModuleFileNameW((HINSTANCE)&__ImageBase, DllPath, (DWORD)MAX_PATH);
+
+  WCHAR *tmp = wcsrchr(DllPath, L'\\');
+  WCHAR wConfigPath[MAX_PATH] = {0};
+
+  size_t path_len = tmp - DllPath;
+
+  wcsncpy(wConfigPath, DllPath, path_len);
+  wcscat(wConfigPath, L"\\config.ini");
+
+  char ConfigPath[MAX_PATH] = {0};
+  wcstombs(ConfigPath, wConfigPath, sizeof(ConfigPath));
+
+  CSimpleIniA ini;
+  ini.SetMultiKey(true);
+
+  if (ini.LoadFile(ConfigPath) >= 0) {
+    _isDebug = ini.GetBoolValue("main", "debug", false);
+  }
+
   try {
     hub = new myo::Hub("com.example.myo_control_module");
 
@@ -165,6 +191,8 @@ void MyoControlModule::colorPrintf(ConsoleColor colors, const char *mask, ...) {
   (*colorPrintf_p)(this, colors, mask, args);
   va_end(args);
 }
+
+bool MyoControlModule::isDebug() { return _isDebug; }
 
 void MyoControlModule::final() {
   hub->removeListener(myo_data_collector);

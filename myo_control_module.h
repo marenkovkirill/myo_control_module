@@ -9,6 +9,8 @@ class MyoControlModule : public ControlModule {
   colorPrintfModuleVA_t *colorPrintf_p;
   ModuleInfo *mi;
 
+  bool _isDebug;
+
  public:
   enum Axis : system_value {
     fist = 1,
@@ -45,6 +47,7 @@ class MyoControlModule : public ControlModule {
   ~MyoControlModule() {}
 
   void colorPrintf(ConsoleColor colors, const char *mask, ...);
+  bool isDebug();
 };
 
 #endif /* MYO_CONTROL_MODULE_H */

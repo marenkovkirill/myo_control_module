@@ -78,29 +78,22 @@ void DataCollector::start(sendAxisState_t sendAxisState_addr) {
 void DataCollector::finish() { sendAxisState_out = NULL; }
 
 void DataCollector::print() {
-  /*std::cout << '\n';
 
-  std::cout << '[' << std::string(roll_w, '*') << std::string(18 - roll_w, ' ')
-  << ']'
-                << '[' << std::string(pitch_w, '*') << std::string(18 - pitch_w,
-  ' ') << ']'
-                << '[' << std::string(yaw_w, '*') << std::string(18 - yaw_w, '
-  ') << ']';
+	if (parent->isDebug()) {
+		std::cout << "roll: " << std::to_string(roll_w) << ' '
+			<< "pitch: " << std::to_string(pitch_w) << ' '
+			<< "yaw: " << std::to_string(yaw_w);
 
-  if (onArm) {
-      std::string poseString = currentPose.toString();
-      std::cout << '[' << (isUnlocked ? "unlocked" : "locked  ") << ']'
-                  << '[' << (whichArm == myo::armLeft ? "L" : "R") << ']'
-                  << '[' << poseString << std::string(14 - poseString.size(), '
-  ') << ']';
-  } else {
-      std::cout << '[' << std::string(8, ' ') << ']' << "[?]" << '[' <<
-  std::string(14, ' ') << ']';
-  }
+		if (onArm) {
+			std::string poseString = currentPose.toString();
+			std::cout << ' ' << (isUnlocked ? "unlocked" : "locked  ") << ' '
+				<< (whichArm == myo::armLeft ? "L" : "R") << ' '
+				<< poseString;
+		}
+		std::cout << '\n';
 
-      std::cout << '\n';
-
-  std::cout << std::flush;*/
+		std::cout << std::flush;
+	}
 
   if (sendAxisState_out) {
     if (onArm && isUnlocked) {
