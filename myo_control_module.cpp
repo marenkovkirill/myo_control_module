@@ -10,6 +10,7 @@
 
 #include <SimpleIni.h>
 
+#include "build_number.h"
 #include "myo_data_collector.h"
 #include "myo_control_module.h"
 
