@@ -124,7 +124,7 @@ MyoControlModule::MyoControlModule() {
   mi = new ModuleInfo;
   mi->uid = UID;
   mi->mode = ModuleInfo::Modes::PROD;
-  mi->version = 1;
+  mi->version = BUILD_NUMBER;
   mi->digest = NULL;
 
   _isDebug = false;
