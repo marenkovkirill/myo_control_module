@@ -8,21 +8,44 @@
 #include "module.h"
 #include "control_module.h"
 
+#include <SimpleIni.h>
+
+#include "build_number.h"
 #include "myo_data_collector.h"
 #include "myo_control_module.h"
 
-const unsigned int COUNT_AXIS = 6;
+const unsigned int COUNT_AXIS = 11;
 
-#define DEFINE_ALL_AXIS            \
-  ADD_AXIS("fist", 1, 0)           \
-  ADD_AXIS("left_or_right", 1, -1) \
-  ADD_AXIS("fingers_spread", 1, 0) \
-  ADD_AXIS("double_tap", 1, 0)     \
-  ADD_AXIS("locked", 1, 0)         \
-  ADD_AXIS("arm_pitch_angle", 18, 0)
+#define ADD_AXIS(AXIS_NAME, AXIS_ID, UPPER_VALUE, LOWER_VALUE) \
+  robot_axis[axis_id] = new AxisData;                          \
+  robot_axis[axis_id]->axis_index = AXIS_ID;                   \
+  robot_axis[axis_id]->upper_value = UPPER_VALUE;              \
+  robot_axis[axis_id]->lower_value = LOWER_VALUE;              \
+  robot_axis[axis_id]->name = AXIS_NAME;                       \
+  axis_id++;
+
+#define DEFINE_ALL_AXIS                                                       \
+  ADD_AXIS("fist", MyoControlModule::Axis::fist, 1, 0)                        \
+  ADD_AXIS("left_or_right", MyoControlModule::Axis::left_or_right, 1, -1)     \
+  ADD_AXIS("fingers_spread", MyoControlModule::Axis::fingers_spread, 1, 0)    \
+  ADD_AXIS("double_tap", MyoControlModule::Axis::double_tap, 1, 0)            \
+  ADD_AXIS("locked", MyoControlModule::Axis::locked, 1, 0)                    \
+  ADD_AXIS("fist_pitch_angle", MyoControlModule::Axis::fist_pitch_angle, 18,  \
+           0)                                                                 \
+  ADD_AXIS("fist_roll_angle", MyoControlModule::Axis::fist_roll_angle, 18, 0) \
+  ADD_AXIS("fist_yaw_angle", MyoControlModule::Axis::fist_yaw_angle, 18, 0)   \
+  ADD_AXIS("fingers_spread_pitch_angle",                                      \
+           MyoControlModule::Axis::fingers_spread_pitch_angle, 18, 0)         \
+  ADD_AXIS("fingers_spread_roll_angle",                                       \
+           MyoControlModule::Axis::fingers_spread_roll_angle, 18, 0)          \
+  ADD_AXIS("fingers_spread_yaw_angle",                                        \
+           MyoControlModule::Axis::fingers_spread_yaw_angle, 18, 0)
+
+#define UID "Myo control module v1.01b by m79lol"
 
 bool myo_working = false;
 CRITICAL_SECTION myo_working_mutex;
+EXTERN_C IMAGE_DOS_HEADER __ImageBase;
 
 unsigned int WINAPI waitTerminateSignal(void *arg) {
   HANDLE hStdin = GetStdHandle(STD_INPUT_HANDLE);
@@ -99,12 +122,41 @@ void MyoControlModule::execute(sendAxisState_t sendAxisState) {
 }
 
 MyoControlModule::MyoControlModule() {
+  mi = new ModuleInfo;
+  mi->uid = UID;
+  mi->mode = ModuleInfo::Modes::PROD;
+  mi->version = BUILD_NUMBER;
+  mi->digest = NULL;
+
+  _isDebug = false;
+
   robot_axis = new AxisData *[COUNT_AXIS];
   system_value axis_id = 0;
   DEFINE_ALL_AXIS
 }
 
 int MyoControlModule::init() {
+  WCHAR DllPath[MAX_PATH] = {0};
+  GetModuleFileNameW((HINSTANCE)&__ImageBase, DllPath, (DWORD)MAX_PATH);
+
+  WCHAR *tmp = wcsrchr(DllPath, L'\\');
+  WCHAR wConfigPath[MAX_PATH] = {0};
+
+  size_t path_len = tmp - DllPath;
+
+  wcsncpy(wConfigPath, DllPath, path_len);
+  wcscat(wConfigPath, L"\\config.ini");
+
+  char ConfigPath[MAX_PATH] = {0};
+  wcstombs(ConfigPath, wConfigPath, sizeof(ConfigPath));
+
+  CSimpleIniA ini;
+  ini.SetMultiKey(true);
+
+  if (ini.LoadFile(ConfigPath) >= 0) {
+    _isDebug = ini.GetBoolValue("main", "debug", false);
+  }
+
   try {
     hub = new myo::Hub("com.example.myo_control_module");
 
@@ -127,9 +179,7 @@ int MyoControlModule::init() {
   return 0;
 }
 
-const char *MyoControlModule::getUID() {
-  return "Myo control module v1.01b by m79lol";
-}
+const struct ModuleInfo &MyoControlModule::getModuleInfo() { return *mi; }
 
 void MyoControlModule::prepare(colorPrintfModule_t *colorPrintf_p,
                                colorPrintfModuleVA_t *colorPrintfVA_p) {
@@ -142,6 +192,8 @@ void MyoControlModule::colorPrintf(ConsoleColor colors, const char *mask, ...) {
   (*colorPrintf_p)(this, colors, mask, args);
   va_end(args);
 }
+
+bool MyoControlModule::isDebug() { return _isDebug; }
 
 void MyoControlModule::final() {
   hub->removeListener(myo_data_collector);
@@ -170,6 +222,9 @@ void *MyoControlModule::writePC(unsigned int *buffer_length) {
 int MyoControlModule::startProgram(int uniq_index) { return 0; }
 int MyoControlModule::endProgram(int uniq_index) { return 0; }
 
-__declspec(dllexport) ControlModule *getControlModuleObject() {
+PREFIX_FUNC_DLL unsigned short getControlModuleApiVersion() {
+  return CONTROL_MODULE_API_VERSION;
+}
+PREFIX_FUNC_DLL ControlModule *getControlModuleObject() {
   return new MyoControlModule();
 }
