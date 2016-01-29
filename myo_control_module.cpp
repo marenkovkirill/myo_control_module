@@ -41,7 +41,7 @@ const unsigned int COUNT_AXIS = 11;
   ADD_AXIS("fingers_spread_yaw_angle",                                        \
            MyoControlModule::Axis::fingers_spread_yaw_angle, 18, 0)
 
-#define IID "RCT.Myo_control_module_v1.01b"
+#define IID "RCT.Myo_control_module_v101b"
 
 bool myo_working = false;
 CRITICAL_SECTION myo_working_mutex;
