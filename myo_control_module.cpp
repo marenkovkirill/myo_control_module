@@ -41,7 +41,7 @@ const unsigned int COUNT_AXIS = 11;
   ADD_AXIS("fingers_spread_yaw_angle",                                        \
            MyoControlModule::Axis::fingers_spread_yaw_angle, 18, 0)
 
-#define UID "Myo control module v1.01b by m79lol"
+#define IID "RCT.Myo_control_module_v1.01b"
 
 bool myo_working = false;
 CRITICAL_SECTION myo_working_mutex;
@@ -123,7 +123,7 @@ void MyoControlModule::execute(sendAxisState_t sendAxisState) {
 
 MyoControlModule::MyoControlModule() {
   mi = new ModuleInfo;
-  mi->uid = UID;
+  mi->uid = IID;
   mi->mode = ModuleInfo::Modes::PROD;
   mi->version = BUILD_NUMBER;
   mi->digest = NULL;
