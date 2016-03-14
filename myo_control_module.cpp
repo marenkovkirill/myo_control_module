@@ -223,7 +223,7 @@ int MyoControlModule::startProgram(int uniq_index) { return 0; }
 int MyoControlModule::endProgram(int uniq_index) { return 0; }
 
 PREFIX_FUNC_DLL unsigned short getControlModuleApiVersion() {
-  return CONTROL_MODULE_API_VERSION;
+  return MODULE_API_VERSION;
 }
 PREFIX_FUNC_DLL ControlModule *getControlModuleObject() {
   return new MyoControlModule();
